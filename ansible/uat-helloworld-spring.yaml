@@ -1,0 +1,9 @@
+- hosts: uat-helloworld-spring
+  connection: ssh
+  gather_facts: True
+  remote_user: ec2-user
+  become: yes
+  roles:
+    - system_prepare
+    - tomcat9
+    - cloudwatch

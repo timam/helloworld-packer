@@ -1,0 +1,24 @@
+/opt/{{ owner }}/logs/catalina.out {
+    copytruncate
+    dateext
+    dateformat %Y-%m-%d.
+    extension out
+    size 100M
+    daily
+    missingok
+    compress
+    rotate 30
+    create 640 {{ owner }} {{ group }}
+}
+/opt/{{ owner }}/logs/{{ module_name }}.log {
+    copytruncate
+    dateext
+    dateformat %Y-%m-%d.
+    extension out
+    size 100M
+    daily
+    missingok
+    compress
+    rotate 30
+    create 640 {{ owner }} {{ group }}
+}

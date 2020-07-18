@@ -1,0 +1,23 @@
+[Unit]
+Description=Apache Tomcat 9
+After=network.target
+
+[Service]
+Type=oneshot
+Environment=CATALINA_PID=/opt/{{ owner }}/temp/{{ owner }}.pid
+Environment=CATALINA_HOME=/opt/{{ owner }}
+Environment=CATALINA_BASE=/opt/{{ owner }}
+Environment='CATALINA_OPTS=-{{ Xms_value }} -{{ Xmx_value }} -Dspring.profiles.active={{ env }} {{ tomcat.newrelic_parameter }} -server -XX:+UseG1GC'
+Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'
+ExecStart=/opt/{{ owner }}/bin/startup.sh
+ExecStop=/opt/{{ owner }}/bin/shutdown.sh
+RemainAfterExit=yes
+User={{ owner }}
+Group={{ group }}
+LimitNOFILE=10000
+LimitNPROC=10000
+Nice=-5
+
+
+[Install]
+WantedBy=multi-user.target

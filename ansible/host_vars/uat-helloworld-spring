@@ -1,0 +1,16 @@
+---
+
+owner: tomcat
+group: tomcat
+license_key: 1223347349349757793479349734793479
+project_short_code: helloworld
+env: uat
+artifact_name: spring
+module_name: spring
+region: ap-southeast-1
+buffer_duration: 5000
+Xms_value: Xms1024M
+Xmx_value: Xmx2048M
+tomcat:
+  version: 9
+  newrelic_parameter:

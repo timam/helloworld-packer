@@ -1,0 +1,29 @@
+---
+
+- name: update system
+  yum:
+    name: '*'
+    state: latest
+- name: package installation
+  yum:
+    name: ["logrotate", "tuned", "telnet"]
+    state: latest
+- name: logrotate config file copy
+  template:
+    src: tomcat8_logrotate.j2
+    dest: /etc/logrotate.d/
+- name: sysctl kernel parameter copy
+  copy:
+    src: sysctl.conf
+    dest: /etc/sysctl.conf
+- name: tuned service enable
+  systemd:
+    name: tuned
+    enabled: yes
+    masked: no
+- name: tuned service restart
+  systemd:
+    name: tuned
+    state: restarted
+- name: tuned profile configured to throughput-performance
+  shell: tuned-adm profile throughput-performance

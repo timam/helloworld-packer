@@ -1,0 +1,30 @@
+---
+
+- name: newrelic repo file copy
+  copy:
+    src: newrelic-infra.repo
+    dest: /etc/yum.repos.d/newrelic-infra.repo
+- name: newrelic infra agent installation
+  yum:
+    name: newrelic-infra
+    enablerepo: newrelic-infra
+    state: latest
+- name: newrelic license keyfile
+  template:
+    src: newrelic-infra.yml.j2
+    dest: /etc/newrelic-infra.yml
+- name: newrelic java agent zip file copy
+  unarchive:
+    src: https://java-tomcat-directory.s3-ap-southeast-1.amazonaws.com/newrelic-java-5.2.0.zip
+    dest: /opt/
+    owner: "{{ owner }}"
+    group: "{{ group }}"
+    remote_src: yes
+- name: copy newrelic agent configuration
+  template:
+    src: newrelic.yml.j2
+    dest: /opt/newrelic/newrelic.yml
+    owner: "{{ owner }}"
+    group: "{{ group }}"
+    backup: yes
+  notify: Restart Tomcat
