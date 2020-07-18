@@ -1,0 +1,54 @@
+{
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "{{user `region`}}",
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "name": "amzn2-ami-hvm-*-gp2",
+        "root-device-type": "ebs",
+        "architecture": "x86_64"
+      },
+      "owners" : "amazon",
+      "most_recent": true
+    },
+    "instance_type": "{{user `instance_type`}}",
+    "ssh_username": "ec2-user",
+    "ami_name": "{{user `env`}}-{{user `project`}}-helloworld-spring-{{timestamp}}",
+    "vpc_filter": {
+      "filters": {
+        "isDefault": "true"
+      }
+    },
+    "subnet_filter": {
+      "most_free": true,
+      "random": true
+    },
+    "associate_public_ip_address": "True",
+    "launch_block_device_mappings": [
+      {
+        "device_name": "/dev/xvda",
+        "volume_size": 100,
+        "volume_type": "gp2",
+        "delete_on_termination": true
+      }
+    ],
+    "tags": {
+      "Name" : "{{user `env`}}-{{user `project`}}-helloworld-spring-{{timestamp}}",
+      "source_ami" : "amazon-linux-2",
+      "Resource-Type" : "ami",
+      "Environment" : "{{user `env`}}",
+      "Version" : "{{user `Version`}}",
+      "Developer" : "RND",
+      "Cost-Center" : "{{user `project`}}",
+      "Project" : "{{user `project`}}"
+     }
+  }],
+  "provisioners": [{
+    "type": "ansible",
+    "playbook_file": "../ansible/{{user `env`}}-{{user `project`}}-helloworld-spring.yaml",
+    "user": "ec2-user",
+    "host_alias": "{{user `env`}}-{{user `project`}}-helloworld-spring",
+    "ansible_env_vars": ["ANSIBLE_HOST_KEY_CHECKING=False", "ANSIBLE_SSH_ARGS='-o ForwardAgent=yes -o ControlMaster=auto -o ControlPersist=60s'", "ANSIBLE_NOCOLOR=True"]
+  }]
+}
